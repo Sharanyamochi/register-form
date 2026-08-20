@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration Form</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Event Registration</h2>
+
+    <form id="form">
+
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+
+        <label for="event">Event Name</label>
+        <input type="text" id="event" name="event" placeholder="Enter event name" required>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <p id="result" aria-live="polite"></p>
+
+</div>
+
+<script>
+
+document.getElementById("form").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const resultBox = document.getElementById("result");
+    resultBox.textContent = "Registering...";
+
+    let data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        event: document.getElementById("event").value
+    };
+
+    fetch("http://localhost:5000/register",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(data)
+    })
+
+    .then(response=>response.json())
+
+    .then(result=>{
+        resultBox.textContent = result.message || "Registration Successful";
+    })
+
+    .catch(error=>{
+        resultBox.textContent = "Error connecting to server";
+        console.log(error);
+    });
+
+});
+
+</script>
+
+</body>
+</html>
